@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block pagetitle %}Signup{% endblock %}
+
+{% block content %}
+<div id='middle'>
+	<form action="/member/register/" method="post">{% csrf_token %}
+		{% include "form.html" with form=form %}
+		<div>
+			<input type="submit" value="Submit" id='signup-submit' />
+		</div>
+	</form>
+</div>
+{% endblock %}

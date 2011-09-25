@@ -1,0 +1,129 @@
+{% load static %}
+{% get_static_prefix as STATIC_DIR %}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+	<head>
+		<link rel="stylesheet" type="text/css" href="{{STATIC_DIR}}default.css" />
+		<link rel="stylesheet" type="text/css" href="{{STATIC_DIR}}main.css" />
+		<title>{% block pagetitle %}Welcome to City Chattr{% endblock %} | City Chattr</title>
+		<script src="https://www.google.com/jsapi?key=ABQIAAAAvQQmUH3Ff2x8mUCPcFUu8RQbqwcvo6K3p5mjESH3p_3Lz8o-chTGtlqZ8B-YGYvmoRmYUCCxHeMzvg" type="text/javascript"></script>
+		<script type='text/javascript'>
+			 google.load("jquery", "1.6.2");
+		</script>
+	</head>
+	<body>
+		<script type='text/javascript'>
+			$(document).ajaxSend(function(event, xhr, settings) {
+				function getCookie(name) {
+					var cookieValue = null;
+					if (document.cookie && document.cookie != '') {
+						var cookies = document.cookie.split(';');
+						for (var i = 0; i < cookies.length; i++) {
+							var cookie = jQuery.trim(cookies[i]);
+							// Does this cookie string begin with the name we want?
+							if (cookie.substring(0, name.length + 1) == (name + '=')) {
+								cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+								break;
+							}
+						}
+					}
+					return cookieValue;
+				}
+				function sameOrigin(url) {
+					// url could be relative or scheme relative or absolute
+					var host = document.location.host; // host + port
+					var protocol = document.location.protocol;
+					var sr_origin = '//' + host;
+					var origin = protocol + sr_origin;
+					// Allow absolute or scheme relative URLs to same origin
+					return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+						(url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+						// or any other URL that isn't scheme relative or absolute i.e relative.
+						!(/^(\/\/|http:|https:).*/.test(url));
+				}
+				function safeMethod(method) {
+					return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+				}
+			
+				if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+					xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+				}
+			});
+			$(function(){
+				var lastsearch='';
+				$('#quick-search').focus(function(){
+					if($(this).val()=='Search') $(this).val('');
+				});
+				$('#quick-search').blur(function(){
+					if($(this).val()=='') $(this).val('Search');
+				});
+				$('body').click(function(){
+					$('#search-box ul').hide();
+				});
+				$('#quick-search').keyup(function(){
+					var val=$(this).val();
+					if(val==lastsearch){
+						$('#search-box ul').show();
+						return;
+					}
+					lastsearch=val;
+					if(val==''){
+						$('#search-box ul').hide();
+						return;
+					}
+					$.get('/qsearch/'+val+'/',function(data){
+						if(val!=lastsearch) return;
+						data=$.parseJSON(data);
+						$('#search-box ul').html('');
+						if(!data.areas.length && !data.members.length){
+							$('#search-box ul').hide();
+							return;
+						}
+						if(data.areas.length){
+							$('#search-box ul').append('<li class="search-divider">Areas</li>');
+							for(x in data.areas){
+								$('#search-box ul').append('<li><a href="/area/'+data.areas[x].fields.urltag+'/"><img src="'+data.areas[x].extras.thumb+'" /> '+data.areas[x].fields.name+'</a></li>');
+							}
+						}
+						if(data.members.length){
+							$('#search-box ul').append('<li class="search-divider">Members</li>');
+							for(x in data.members){
+								$('#search-box ul').append('<li><a href="/member/'+data.members[x].fields.user.fields.username+'/"><img src="'+data.members[x].extras.thumb+'" /> '+data.members[x].extras.full_name+'</a></li>');
+							}
+						}
+						$('#search-box ul').show();
+					});
+				});
+			});
+		</script>
+		<div id='top-bar'>
+			<div class='middle clearfix'>
+	        {% if user.is_authenticated %}
+	        	<div class='left'>Welcome {{user.get_profile.full_name}}!</div>
+	        	<div class='right'>
+	        		<a href='/member/home/'>View Profile</a> | 
+	            	<a href='/auth/logout/'>Logout</a>
+	           </div>
+				<div class='right' id='search-box'>
+					<input type='text' name='search' id='quick-search' value='Search' />
+					<ul class='hidden'></ul>
+				</div>
+	        {% else %}
+	        	<div class='left'>Welcome Guest!</div>
+	        	<div class='right'>
+		            <a href='/member/register/'>Register</a> | 
+		            <a href='/auth/login/'>Login</a>
+		        </div>
+	        {% endif %}
+	        </div>
+        </div>
+		<div id='head'>
+			<div id='logo'>
+				<a href=''><img src='{{STATIC_DIR}}images/logo.png' /></a>
+			</div>
+		</div>
+		{% block content %}
+            Nothing here
+        {% endblock %}
+	</body>
+</html>

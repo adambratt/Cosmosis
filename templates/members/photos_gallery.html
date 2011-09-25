@@ -1,0 +1,54 @@
+{% extends 'members/base.html' %}
+{% block pagetitle %}Photo Galleries{% endblock %}
+
+{% block member %}
+<script type='text/javascript'>
+	var memberid='{{profile.user}}'
+	$(function(){
+		$('.photo').hover(function(){
+			$(this).find('.photo-controls').removeClass('hidden').slideDown(200);
+		},
+		function(){
+			$(this).find('.photo-controls').slideUp(200,function(){ $(this).addClass('hidden'); });
+		});
+		$('.delete-control').click(function(){
+			if($(this).parents('li')[0].attr('class')=='default_pic') return false;
+			$(this).parents('li').fadeOut(200,function(){ $(this).remove(); });
+			$.get('/member/'+memberid+'/remove_photo/'+$(this).parent().attr('rel'),function(data){				
+			});
+			return false;
+		});
+		$('.default-control').click(function(){
+			$('#photos ul li').removeClass('default-pic');
+			$(this).parents('li').addClass('default-pic');
+			$.get('/member/'+memberid+'/default_photo/'+$(this).parent().attr('rel'),function(data){	
+			});
+			return false;
+		});
+	});
+</script>
+<div class='page' id='profile'>
+	<div class='page-header form-header clearfix'>
+		<h2>Photos</h2>
+	</div>
+	<div class='page-box clearfix' id='photos'>
+		<div class='right upload-photo'><a href='/member/upload/'>Upload Photo</a></div>
+		<div class='clear'></div>
+		<ul>
+		{% for pic in profile.photos.all %}
+			<li {% if pic.name == profile.mainphoto.name %}class='default-pic'{% endif %}>
+				<a href='/member/{{profile.user}}/view_photo/{{pic.name}}' class='photo'>
+					<img src='/image/{{pic.name}}/album/' alt='{{pic.caption}}' />
+					{% if user == profile.user %}
+					<div class='photo-controls hidden' rel='{{pic.name}}'>
+						<div class='delete-control'>Delete</div>
+						<div class='default-control'>Make Default</div>
+					</div>
+					{% endif %}
+				</a>
+			</li>
+		{% endfor %}
+		</ul>
+	</div>
+</div>
+{% endblock %}

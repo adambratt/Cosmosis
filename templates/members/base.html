@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id='content'>
+	<div id='main-box'>
+		{% block member %}
+		{% endblock %}
+	</div>
+	<div id='sidebar'>
+		<div id='side-box'>
+			<div class='mini-gallery' id='following-list'>
+				<div class='mini-gallery-title'>
+					<h3>{{profile.follows.all.count}} Following</h3>
+					{% if profile.follows.all.count > 8 %}<a href=''>view all</a>{% endif %}
+				</div>
+				<ul class='mini-gallery-list clearfix'>
+					{% for f_user in profile.follows.all %}
+					<li {% if forloop.counter|divisibleby:"4" %}class='last'{% endif %}>
+						<a href='/member/{{f_user.user}}'><img src='{{f_user.thumb}}' /></a>
+						<div class='hidden mini-popup'>
+							{{f_user.full_name}}
+						</div>
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
+			<div class='mini-gallery' id='follower-list'>
+				<div class='mini-gallery-title'>
+					<h3>{{profile.member_set.all.count}} Followers</h3>
+					{% if profile.member_set.all.count > 8 %}<a href=''>view all</a>{% endif %}
+				</div>
+				<ul class='mini-gallery-list clearfix'>
+					{% for f_user in profile.member_set.all %}
+					<li {% if forloop.counter|divisibleby:"4" %}class='last'{% endif %}>
+						<a href='/member/{{f_user.user}}'><img src='{{f_user.thumb}}' /></a>
+						<div class='hidden mini-popup'>
+							{{f_user.full_name}}
+						</div>
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
+			<div class='mini-gallery' id='group-list'>
+				<div class='mini-gallery-title'>
+					<h3>{{profile.areas.all.count}} Areas</h3>
+					{% if profile.areas.all.count > 8 %}<a href=''>view all</a>{% endif %}
+				</div>
+				<ul class='mini-gallery-list clearfix'>
+					{% for area in profile.areas.all %}
+					<li {% if forloop.counter|divisibleby:"4" %}class='last'{% endif %}>
+						<a href='/area/{{area.urltag}}'><img src='{{area.thumb}}' /></a>
+						<div class='hidden mini-popup'>
+							{{area.name}}
+						</div>
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
+			<div class='mini-gallery' id='group-list'>
+				<div class='mini-gallery-title'>
+					<h3>3 Groups</h3>
+					<a href=''>view all</a>
+				</div>
+				<ul class='mini-gallery-list clearfix'>
+					<li><a href=''><img src='{{STATIC_DIR}}images/avatar.jpg' /></a></li>
+					<li><a href=''><img src='{{STATIC_DIR}}images/avatar.jpg' /></a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+<script type='text/javascript'>
+	 $(function(){
+	 	$('#profile-follow').live('click',function(){
+	 		var t=$(this);
+	 		$.get('/member/add_follower/'+t.attr('rel'),function(data){
+	 			t.html('Unfollow');
+	 			t.attr('id','profile-unfollow')
+	 		});
+	 		return false;
+	 	});
+	 	$('#profile-unfollow').live('click',function(){
+	 		var t=$(this);
+	 		$.get('/member/remove_follower/'+t.attr('rel'),function(data){
+	 			t.html('Follow')
+	 			t.attr('id','profile-follow')
+	 		});
+	 		return false;
+	 	});
+	 	$('.mini-gallery-list li').hover(function(){
+	 		$(this).find('.mini-popup').removeClass('hidden');
+	 	},
+	 	function(){
+	 		$(this).find('.mini-popup').addClass('hidden');
+	 	});
+	 });
+</script>
+{% endblock %}

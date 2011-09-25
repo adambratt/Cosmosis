@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block pagetitle %}Viewing User Profile{% endblock %}
+
+{% block content %}
+<div id='content'>
+	<div id='main-box'>
+		<div class='page' id='profile'>
+			<div class='page-header form-header clearfix'>
+				<h2>Edit Profile</h2>
+			</div>
+			<div class='page-box clearfix'>
+				<form method='post' action='/member/edit_profile/'>
+					{% include "form.html" with form=form %}
+					<div class='submit'>
+						<input type='submit' value='Save Profile' class='button' />
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div id='sidebar'>
+		<div id='side-box'>
+			<div class='mini-gallery' id='following-list'>
+				<div class='mini-gallery-title'>
+					<h3>55 Following</h3>
+					<a href=''>view all</a>
+				</div>
+				<ul class='mini-gallery-list clearfix'>
+					<li><a href=''><img src='{{STATIC_DIR}}images/avatar.jpg' /></a><div class='hidden mini-popup'>lala</div></li>
+					<li><a href=''><img src='{{STATIC_DIR}}images/avatar.jpg' /></a></li>
+					<li><a href=''><img src='{{STATIC_DIR}}images/avatar.jpg' /></a></li>
+					<li class='last'><a href=''><img src='{{STATIC_DIR}}images/avatar.jpg' /></a></li>
+					<li><a href=''><img src='{{STATIC_DIR}}images/avatar.jpg' /></a></li>
+					<li><a href=''><img src='{{STATIC_DIR}}images/avatar.jpg' /></a></li>
+					<li><a href=''><img src='{{STATIC_DIR}}images/avatar.jpg' /></a></li>
+					<li class='last'><a href=''><img src='{{STATIC_DIR}}images/avatar.jpg' /></a></li>
+				</ul>
+			</div>
+			<div class='mini-gallery' id='follower-list'>
+				<div class='mini-gallery-title'>
+					<h3>103 Followers</h3>
+					<a href=''>view all</a>
+				</div>
+				<ul class='mini-gallery-list clearfix'>
+					<li><a href=''><img src='{{STATIC_DIR}}images/avatar.jpg' /></a></li>
+					<li><a href=''><img src='{{STATIC_DIR}}images/avatar.jpg' /></a></li>
+					<li><a href=''><img src='{{STATIC_DIR}}images/avatar.jpg' /></a></li>
+					<li class='last'><a href=''><img src='{{STATIC_DIR}}images/avatar.jpg' /></a></li>
+					<li><a href=''><img src='{{STATIC_DIR}}images/avatar.jpg' /></a></li>
+					<li><a href=''><img src='{{STATIC_DIR}}images/avatar.jpg' /></a></li>
+				</ul>
+			</div>
+			<div class='mini-gallery' id='group-list'>
+				<div class='mini-gallery-title'>
+					<h3>3 Groups</h3>
+					<a href=''>view all</a>
+				</div>
+				<ul class='mini-gallery-list clearfix'>
+					<li><a href=''><img src='{{STATIC_DIR}}images/avatar.jpg' /></a></li>
+					<li><a href=''><img src='{{STATIC_DIR}}images/avatar.jpg' /></a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

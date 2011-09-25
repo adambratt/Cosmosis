@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block pagetitle %}Viewing Submission{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    <!-- Authenticated menu -->
+{% else %}
+    {% if form.errors %}
+    <p>Your username and password didn't match. Please try again.</p>
+    {% endif %}
+    <h3>Login</h3>
+    <form action="/auth/login/" method="post" accept-charset="utf-8">
+        {% csrf_token %}
+        <label for="email">Email</label><input type="text" name="email" value="" id="email-login" />
+        <label for="password">Password</label><input type="password" name="password" value="" id="password-login" />
+        <input type="hidden" name="next" value="{{ NEXT }}" />
+        <p><input type="submit" value="Login"></p>
+    </form>
+{% endif %}
+{% endblock %}

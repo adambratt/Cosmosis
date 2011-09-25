@@ -1,0 +1,94 @@
+{% extends 'members/base.html' %}
+{% block pagetitle %}Viewing User Profile{% endblock %}
+
+{% block member %}
+<div class='page' id='profile'>
+	<div class='page-header clearfix' id='profile-header'>
+		<a href='' id='profile-mainpic'><img src='{{profile.avatar}}' /></a>
+		<div id='profile-header-info'>
+			<h2 class='username'>{{profile.full_name}}</h2>
+			{% if profile.user == user %}<a href='/member/edit_profile'>(edit profile)</a> <a href='/member/{{profile.user}}/photos/'>(edit photos)</a>{% endif %}
+			<div id='profile-points' class='beast'>{{profile.points}} points</div>
+			<div id='profile-member-length' class='beast'>Member since {{profile.user.date_joined|date:"F Y"}}</div>
+		</div>
+		<div id='profile-header-buttons'>
+			<a href='' class='button button-send-message' id='profile-send-message'>Send Message</a>
+			{% if isfollower %}
+			<a href='#' class='button button-follow' id='profile-unfollow' rel='{{profile.user}}'>Unfollow</a>
+			{% else %}
+			<a href='#' class='button button-follow' id='profile-follow' rel='{{profile.user}}'>Follow</a>
+			{% endif %}
+		</div>
+	</div>
+	<div class='page-box clearfix' id='profile-about'>
+		<div class='page-gallery clearfix' id='profile-gallery'>
+			<div class='page-gallery-main'>
+				{% if profile.mainphoto %}
+				<a href='/member/{{profile.user}}/photos/'><img src='/image/{{profile.mainphoto.name}}/gallery/' /></a>
+				{% endif %}
+			</div>
+			<div class='page-gallery-row clearfix'>
+				<ul>
+				{% for pic in profile.photos.all %}
+					{% if forloop.counter < 6 %}
+					<li><a href='/member/{{profile.user}}/view_photo/{{pic.name}}'><img src='/image/{{pic.name}}/thumb/' /></a></li>
+					{% endif %}
+				{% endfor %}
+				</ul>
+			</div>
+		</div>
+		<div class='page-box-info clearfix' id='profile-info'>
+			<div class='page-info clearfix'>
+				<div class='page-info-label'>About Me</div>
+				<div class='page-info-desc'>{% if profile.about %}{{profile.about|escape}}{% else %}<em>No information provided</em>{% endif %}</div>
+			</div>
+			<div class='page-info clearfix'>
+				<div class='page-info-label'>Things I Like</div>
+				<div class='page-info-desc'>{% if profile.interests %}{{profile.interests|escape}}{% else %}<em>No interests provided</em>{% endif %}</div>
+			</div>
+			{% if profile.gender %}
+			<div class='page-info clearfix'>
+				<div class='page-info-label'>Gender</div>
+				<div class='page-info-desc'>{{profile.gender|escape}}</div>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+	<div class='page-divider'><h3>Recent Activity</h3></div>
+	<div class='page-activity' id='profile-activity'>
+		<div class='post-activity clearfix'>
+			<input type='text' name='activity' size='120' />
+			<input type='submit' class='button' value='Post' id='add-activity' />
+		</div>
+		{% for activity in profile.comments.all %}
+		<div class='activity clearfix'>
+			<div class='activity-img'><a href=''><img src='{{activity.member.thumb}}' /></a></div>
+			<div class='activity-content'>
+				<div class='activity-header'><a href='/member/{{activity.member.user}}'><span class='username'>{{activity.member.full_name}}</span></a> <span class='time'>{{activity.create_ts|date}}</span></div>
+				<div class='activity-body'>
+					{{activity.body}}
+				</div>
+				<ul class='activity-actions'>
+					{% comment %}
+					<li><a href=''>Reply</a></li>
+					<li><a href=''>Rate</a></li>
+					<li><a href=''>Report</a></li>
+					{% endcomment %}
+				</ul>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+</div>
+<script type='text/javascript'>
+	var memberid='{{profile.user}}'
+	$(function(){
+		$('#add-activity').click(function(){
+			var t=$(this);
+			$.post('/member/add_comment/'+memberid+'/',{comment: $('[name=activity]').val()}, function(data){
+				t.parent().fadeOut();
+			});
+		})
+	})
+</script>
+{% endblock %}

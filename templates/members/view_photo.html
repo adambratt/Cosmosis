@@ -1,0 +1,18 @@
+{% extends 'members/base.html' %}
+{% block pagetitle %}Viewing {{profile.full_name}}'s Photo{% endblock %}
+
+{% block member %}
+<div class='page' id='profile'>
+	<div class='page-header form-header clearfix'>
+		<h2>Viewing <a href='/member/{{profile.user}}/'>{{profile.full_name}}'s</a> Photo</h2>
+	</div>
+	<div class='page-box clearfix'>
+		<img src='/image/{{image.name}}/large/' />
+	</div>
+	{% if profile == user %}
+	<div class='page-box clearfix'>
+		<a href=''>Make Profile Photo</a>
+	</div>
+	{% endif %}
+</div>
+{% endblock %}

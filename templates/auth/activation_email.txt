@@ -1,0 +1,2 @@
+Here is your key: {{activation_key}} use it within {{expiration_days}}
+
