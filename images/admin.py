@@ -1,5 +1,4 @@
-from images.models import Photo,Album
+from images.models import Image
 from django.contrib import admin
 
-admin.site.register(Photo)
-admin.site.register(Album)
+admin.site.register(Image)

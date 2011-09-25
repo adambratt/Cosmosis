@@ -7,25 +7,6 @@ from django.conf import settings
 import random
 
 ##############################
-# Universal Classes
-##############################
-
-COMMENT_TYPES = (
-    ('Area', 'Area'),
-    ('Profile', 'Profile'),
-    ('Photo', 'Photo'),
-)
-
-class Comment(models.Model):
-    body=models.TextField()
-    member=models.ForeignKey('Member',related_name='member_comment')
-    type=models.CharField(max_length=10,blank=True,choices=COMMENT_TYPES)
-    create_ts=models.DateTimeField(auto_now_add=True)
-    class Meta:
-        get_latest_by = "create_ts"
-        ordering = ["-create_ts"]
-
-##############################
 # Member Related Classes
 ##############################
 
